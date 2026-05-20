@@ -1,27 +1,24 @@
 <?php
+session_start();
 include 'php/koneksi.php';
+
+if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
+    header("Location: php/login.php");
+    exit();
+}
+
+$user_id = $_SESSION['id_user'];
 
 $query = "SELECT * FROM coffe";
 $result = mysqli_query($conn, $query);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $email = $_POST['email'];
-    $alamat = $_POST['alamat'];
+$queryUser = "SELECT * FROM user WHERE id_user = ?";
+$stmtUser = mysqli_prepare($conn, $queryUser);
+mysqli_stmt_bind_param($stmtUser, "i", $user_id);
+mysqli_stmt_execute($stmtUser);
+$resultUser = mysqli_stmt_get_result($stmtUser);
+$rowUser = mysqli_fetch_assoc($resultUser);
 
-    $sql = "INSERT INTO user (username, password, email, alamat, role) 
-            VALUES ('$username', '$password', '$email', '$alamat', 'pelanggan')";
-
-    if (mysqli_query($conn, $sql)) {
-    echo "<script>
-            alert('Akun anda berhasil didaftarkan');
-            window.location.href='index.php';
-            </script>";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -33,23 +30,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="Style/style.css">
     <style>
         header .navbar a#btnLogin {
-    background-color: #3e2723; 
-    color: #ffffff;          
-    padding: 8px 20px;       
-    border-radius: 5px;                   
-    display: inline-block;               
-    margin-left: 20px;
-    font-weight: bold;
-    text-decoration: none;    
-    transition: 0.3s;
-    }
+        background-color: #3e2723; 
+        color: #ffffff;          
+        padding: 8px 20px;       
+        border-radius: 5px;                   
+        display: inline-block;               
+        margin-left: 20px;
+        font-weight: bold;
+        text-decoration: none;    
+        transition: 0.3s;
+        }
 
-    /* Efek Hover */
-    header .navbar a#btnLogin:hover {
-        background-color: #5d4037; 
-        color: #ffffff;
-        text-decoration: none;   
-    }
+        /* Efek Hover */
+        header .navbar a#btnLogin:hover {
+            background-color: #5d4037; 
+            color: #ffffff;
+            text-decoration: none;   
+        }
     </style>
 </head>
 <body id="top">
@@ -62,7 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="#foto-kopi">about</a>
         <a href="#menu">Katalog</a> 
         <a href="#contact">contact</a>
-        <a href="php/Login.php" id="btnLogin">Login</a>
+        <a href="php/order.php" id="btnLogin">Order</a>
+        <a href="php/logout.php">Logout</a>
     </nav>
 
 </header>
@@ -70,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <section class="home" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/home-bg.jpg') center/cover;
 ">
     <div class="content">
-        <h3>freshly brewed</h3>
+        <h3>Hi <?php echo $rowUser['username'] ?></h3>
         <span>start your day with a coffee</span>
         <p>Nikmati perpaduan biji kopi pilihan dengan suasana yang menenangkan. Kami menyajikan kebahagiaan dalam setiap cangkir untuk menemani produktivitas Anda.</p>
         <a href="php/order.php" class="btn">ORDER NOW</a>
