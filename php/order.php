@@ -116,39 +116,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="order-card">
         <h1>Place Your Order</h1>
 
-        <form action="proses_order.php" method="POST">
+            <form action="proses_order.php" method="POST" class="order-form">
+            
             <div class="form-group">
-                <label for="jenis_kopi">Jenis Kopi</label>
-                <select name="jenis_kopi" id="jenis_kopi" required>
-                    <option value="" disabled selected>-- Pilih Kopi Anda --</option>
-                    <option value="Arabika Gayo">Arabika Gayo - Rp 165.000</option>
-                    <option value="Arabika Toraja">Arabika Toraja - Rp 175.000</option>
-                    <option value="Robusta Temanggung">Robusta Temanggung - Rp 145.000</option>
+                <label for="jenis_kopi">Pilih Kopi</label>
+                <select id="jenis_kopi" name="jenis_kopi" required>
+                    <option value="" data-harga="0">-- Pilih Menu --</option>
+                    <option value="Arabica Blend" data-harga="25000">Arabica Blend - Rp 25.000</option>
+                    <option value="Robusta Latte" data-harga="22000">Robusta Latte - Rp 22000</option>
+                    <option value="Espresso" data-harga="18000">Espresso - Rp 18.000</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="jumlah">Jumlah (Pack/Cangkir)</label>
-                <input type="number" id="jumlah" name="jumlah" min="1" placeholder="Masukkan jumlah" required>
+                <label for="jumlah">Jumlah Cangkir</label>
+                <input type="number" id="jumlah" name="jumlah" min="1" value="1" required>
             </div>
 
             <div class="form-group">
                 <label for="metode_pembayaran">Metode Pembayaran</label>
-                <select name="metode_pembayaran" id="metode_pembayaran" required>
-                    <option value="" disabled selected>-- Pilih Pembayaran --</option>
-                    <option value="Tunai">Tunai (Cash)</option>
+                <select name="metode_pembayaran" required>
+                    <option value="Cash">Cash / Tunai</option>
                     <option value="Transfer Bank">Transfer Bank</option>
-                    <option value="QRIS">QRIS / E-Wallet</option>
+                    <option value="E-Wallet">E-Wallet (Dana/OVO)</option>
                 </select>
             </div>
 
-            <div class="order-footer">
-                <a href="../index.php" id="backHome"> Kembali ke Beranda</a>
-                <button type="submit" class="btn-order">Pesan Sekarang</button>
+            <div class="form-group">
+                <label for="total_harga_display">Total Harga</label>
+                <input type="text" id="total_harga_display" value="Rp 0" readonly>
+                <input type="hidden" id="total_harga" name="total_harga" value="0">
             </div>
+
+            <button type="submit" id="tombolCek" class="btn-order">Konfirmasi Order</button>
         </form>
+
     </div>
 </section>
 
 </body>
+<script>
+    const jenisKopi = document.getElementById('jenis_kopi');
+    const jumlahInput = document.getElementById('jumlah');
+    const totalHargaDisplay = document.getElementById('total_harga_display');
+    const totalHargaHidden = document.getElementById('total_harga');
+
+    function hitungTotal() {
+        const pilihan = jenisKopi.options[jenisKopi.selectedIndex];
+        const harga = parseFloat(pilihan.getAttribute('data-harga')) || 0;
+        const jumlah = parseInt(jumlahInput.value) || 0;
+        
+        const total = harga * jumlah;
+        
+        totalHargaDisplay.value = "Rp " + total.toLocaleString('id-ID');
+        totalHargaHidden.value = total;
+    }
+
+    jenisKopi.addEventListener('change', hitungTotal);
+    jumlahInput.addEventListener('input', hitungTotal);
+</script>
 </html>

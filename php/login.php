@@ -44,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- PERBAIKAN LOGIKA: Mengubah judul agar sesuai dengan fungsi halaman -->
     <title>Login - Le Coffe</title> 
     <link rel="stylesheet" href="../Style/style.css"> 
     <style>
@@ -113,8 +112,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 </section>
-
-<script src="../Js/cekOrder.js"></script>
 
 </body>
 </html>

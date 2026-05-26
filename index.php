@@ -106,7 +106,6 @@ $rowUser = mysqli_fetch_assoc($resultUser);
                 echo "<tr>";
                 echo "<td>" . $row['jenis'] . "</td>";
                 echo "<td>" . $row['satuan'] . "</td>";
-                // Mengformat angka harga agar rapi (Rp 165.000)
                 echo "<td>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>";
                 echo "<td>" . $row['keterangan'] . "</td>";
                 echo "</tr>";
